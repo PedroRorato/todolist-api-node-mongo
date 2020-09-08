@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const User = mongoose.model('User');
+const User = require('../models/User')
 
 module.exports = {
     async index(request, response) {
@@ -9,28 +7,28 @@ module.exports = {
         return response.json(users);
     },
 
-    async show(req, res) {
-        const product = await User.findById(req.params.id);
+    async show(request, response) {
+        const user = await User.findById(request.params.id);
 
-        return res.json(product);
+        return response.json(user);
     },
 
-    async store(req, res) {
-        const product = await User.create(req.body);
+    async store(request, response) {
+        const user = await User.create(request.body);
 
-        return res.json(product);
+        return response.json(user);
     },
 
-    // async update(req, res) {
-    //     //O parametro { new: true } é para retornar o objeto atualizado
-    //     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    async update(request, response) {
+        //O parametro { new: true } é para retornar o objeto atualizado
+        const user = await User.findByIdAndUpdate(request.params.id, request.body, { new: true });
 
-    //     return res.json(product);
-    // },
+        return response.json(user);
+    },
 
-    // async destroy(req, res) {
-    //     const product = await Product.findByIdAndRemove(req.params.id);
+    async destroy(request, response) {
+        await User.findByIdAndRemove(request.params.id);
 
-    //     return res.send();
-    // }
+        return response.send({ message: "User successfully deleted!" });
+    }
 };
