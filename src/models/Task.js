@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 //const mongoosePaginate = require('mongoose-paginate');
 
-const UserSchema = new mongoose.Schema({
-    name: {
+const TaskSchema = new mongoose.Schema({
+    title: {
         type: String,
         required: true
     },
-    email: {
+    description: {
         type: String,
         required: true,
     },
@@ -14,12 +14,13 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    tasks: [{
+    user: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Task' 
-    }]
+        ref: 'User' ,
+        required: true
+    }
 });
 
 //ProductSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Task', TaskSchema);
