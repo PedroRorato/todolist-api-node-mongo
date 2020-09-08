@@ -9,7 +9,6 @@ To download all dependencies, go to the project root directory and execute in yo
 
     yarn
 
-
 ### 2. Run the application
 To run the application, go to the project root directory and execute in your terminal:
 
