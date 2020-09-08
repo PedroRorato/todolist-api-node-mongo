@@ -1,4 +1,5 @@
-const User = require('../models/User')
+const User = require('../models/User');
+const Task = require('../models/Task');
 
 module.exports = {
 
@@ -43,7 +44,10 @@ module.exports = {
 
     async destroy(request, response) {
 
-        await User.findByIdAndRemove(request.params.id);
+        const user = await User.findById(request.params.id);
+
+        await user.remove();
+        await Task.remove({ user: request.params.id })
 
         return response.send({ message: "User successfully deleted!" });
     }

@@ -5,7 +5,7 @@ module.exports = {
 
     async index(request, response) {
         
-        const user = await User.findById(request.params.userId).populate('tasks');
+        const user = await User.findById(request.params.userId);//.populate('tasks');
 
         return response.json(user);
     },
@@ -21,23 +21,17 @@ module.exports = {
 
         const { title, description } = request.body;
 
-        const user = await User.findById(request.params.userId);
-        const task = new Task({ title, description, user: request.params.userId });
-        await task.save();
-        await user.tasks.push(task);
+        try{
+            const user = await User.findById(request.params.userId);
+            const task = new Task({ title, description, user: request.params.userId });
+            await task.save();
+            await user.tasks.push(task);
+            await user.save();
 
-        await user.save();
-
-        return response.json(user);
-
-        // const task = new Task({ title, description, user: request.params.userId })
-
-        // try{
-        //     const task = await Task.create({  });
-        //     return response.json(task);
-        // } catch(error){
-        //     return response.status(400).json( error );
-        // }
+            return response.json(user);
+        } catch(error) {
+            return response.status(400).json(error);
+        }
     },
 
     async update(request, response) {
@@ -55,8 +49,13 @@ module.exports = {
 
     async destroy(request, response) {
 
-        await Task.findByIdAndRemove(request.params.id);
+        const user = await User.findById(request.params.userId);
+        
+        user.tasks = user.tasks.filter((element) => element != request.params.taskId)
 
-        return response.send({ message: "User successfully deleted!" });
+        await user.save();
+        await Task.findByIdAndRemove(request.params.taskId);
+
+        return response.send({ message: "Task successfully deleted!" });
     }
 };
