@@ -42,20 +42,24 @@ module.exports = {
             //O parametro { new: true } é para retornar o objeto atualizado
             const task = await Task.findByIdAndUpdate(request.params.taskId, { title, description }, { new: true });
             return response.json(task);
-        } catch(error){
-            return response.status(400).json( error );
+        } catch(error) {
+            return response.status(400).json(error);
         }
     },
 
     async destroy(request, response) {
 
-        const user = await User.findById(request.params.userId);
-        
-        user.tasks = user.tasks.filter((element) => element != request.params.taskId)
+        try{
+            const user = await User.findById(request.params.userId);
+            
+            user.tasks = user.tasks.filter((element) => element != request.params.taskId)
 
-        await user.save();
-        await Task.findByIdAndRemove(request.params.taskId);
+            await user.save();
+            await Task.findByIdAndRemove(request.params.taskId);
 
-        return response.send({ message: "Task successfully deleted!" });
+            return response.send({ message: "Task successfully deleted!" });
+        } catch(error) {
+            return response.status(400).json(error);
+        }
     }
 };
