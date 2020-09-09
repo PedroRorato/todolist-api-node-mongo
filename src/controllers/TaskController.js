@@ -52,7 +52,7 @@ module.exports = {
         try{
             const user = await User.findById(request.params.userId);
             
-            user.tasks = user.tasks.filter((element) => element != request.params.taskId)
+            user.tasks.splice(request.params.taskId, 1)
 
             await user.save();
             await Task.findByIdAndRemove(request.params.taskId);
